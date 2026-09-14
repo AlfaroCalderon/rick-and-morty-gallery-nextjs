@@ -21,7 +21,7 @@ export const EpisodesList = () => {
    retry: 1 });
 
    const idlist = useMemo(() => {
-    let result = data.data?.results;
+    let result = typeof data.data !== 'boolean' && data.data?.results;
     if (!result) return [];
     
     const ids:number[] = [];
@@ -36,7 +36,7 @@ export const EpisodesList = () => {
     });
 
     return ids;
-   }, [data.data?.results]);
+   }, [data.data]);
 
       const characterIds = idlist.join(',');
       const CharacterData = useQuery({ queryKey: ['characters', characterIds], queryFn: () => getCharactersByIds({ids: characterIds}),
@@ -95,7 +95,7 @@ export const EpisodesList = () => {
         </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 
-        {data.data?.results?.map((episode:Episode, idx:number) => (
+        {typeof data.data !== 'boolean' && data.data?.results?.map((episode:Episode, idx:number) => (
             <div key={idx} className="border-2 border-purple-300 rounded-xl shadow-lg p-6 bg-gradient-to-br from-white to-purple-50 hover:shadow-2xl hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-xl font-bold mb-2 truncate text-purple-900">{episode.name}</h3>
@@ -116,7 +116,7 @@ export const EpisodesList = () => {
                       const id = raw ? parseInt(raw, 10) : NaN;
 
                       // handle both array response or { results: Character[] } shape
-                      const list = Array.isArray(CharacterData.data) ? CharacterData.data : CharacterData.data?.results;
+                      const list = Array.isArray(CharacterData.data) ? CharacterData.data : (typeof CharacterData.data !== 'boolean' ? CharacterData.data?.results : undefined);
                       const char = list?.find((c: Result) => c.id === id);
                         return char ? (
                         <span onClick={() => { handleSelectCharacter(id);   setIsOpen(true);}} className="font-semibold text-gray-800 truncate flex-1 cursor-pointer hover:text-purple-600 transition-colors">
@@ -142,7 +142,7 @@ export const EpisodesList = () => {
               setCurrentPage(event.selected + 1);
             }}
             pageRangeDisplayed={5}
-            pageCount={data.data?.info?.pages || 1}
+            pageCount={typeof data.data !== 'boolean' && data.data?.info?.pages || 1}
             previousLabel={<ArrowLeft />}
             forcePage={currentPage - 1}
             disableInitialCallback={true}
@@ -160,7 +160,7 @@ export const EpisodesList = () => {
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-black/50 transition-opacity duration-300" style={{opacity: isOpen ? 1 : 0}}>
           <DialogPanel transition className="max-w-lg space-y-4 border-2 border-blue-900 hover:border-2 hover:border-blue-400 bg-white p-12 rounded-2xl duration-300 ease-out shadow-lg data-closed:transform-[scale(95%)] data-closed:opacity-0">
         {CharacterData.data && (() => {
-          const list = Array.isArray(CharacterData.data) ? CharacterData.data : CharacterData.data?.results;
+          const list = Array.isArray(CharacterData.data) ? CharacterData.data : (typeof CharacterData.data !== 'boolean' ? CharacterData.data?.results : undefined);
           const character = list?.find((c: Result) => c.id === characterSelectedID);
           return character ? (
             <>
@@ -208,3 +208,4 @@ export const EpisodesList = () => {
     </>
   )
 }
+
