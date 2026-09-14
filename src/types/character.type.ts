@@ -29,3 +29,8 @@ export type Location = {
   name: string
   url: string
 }
+
+export type CharacterResponse = {
+  info: Info
+  results: Result[]
+}
