@@ -66,7 +66,7 @@ export const CharactersList = () => {
 
         {/* Characters Grid */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-6 justify-items-center'>
-          {data.data?.results?.map( (character: {image: string, name: string, status: string, species: string, gender: string, location: {name: string}}, idx:number)  => (
+           {typeof data.data !== 'boolean' && data.data?.results?.map( (character: {image: string, name: string, status: string, species: string, gender: string, location: {name: string}}, idx:number)  => (
             <div key={idx} className='bg-gray-200 w-full md:w-64 lg:w-[300px] rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-500 ease-in-ou border-2 border-blue-300 hover:border-blue-500'>
               <div className='w-full h-64 overflow-hidden relative'>
                <Image 
@@ -97,7 +97,7 @@ export const CharactersList = () => {
               setCurrentPage(event.selected + 1);
             }}
             pageRangeDisplayed={5}
-            pageCount={data.data?.info?.pages || 1}
+            pageCount={typeof data.data !== 'boolean' && data.data?.info?.pages || 1}
             previousLabel={<ArrowLeft />}
             forcePage={currentPage - 1}
             disableInitialCallback={true}
