@@ -19,3 +19,9 @@ export type Episode = {
   url: string
   created: string
 }
+
+export type EpisodeResponse = {
+  info: Info
+  results: Episode[]
+}
+
